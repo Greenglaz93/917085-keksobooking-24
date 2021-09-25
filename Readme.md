@@ -1,3 +1,6 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
+[![Actions Status](https://github.com/Greenglaz93/917085-keksobooking-24/actions/workflows/check.yml/badge.svg)](https://github.com/Greenglaz93/917085-keksobooking-24/actions)
+
 # Личный проект «Кексобукинг»
 
 * Студент: [Valeriya Zaytseva](https://up.htmlacademy.ru/javascript/24/user/917085).
