@@ -74,14 +74,12 @@ const OFFER_PHOTOS = [
 
 const generatePhotoId = createUniqueIdGeneratorFromRange(SIMILAR_COUNT_MIN, SIMILAR_COUNT_MAX);
 
-// eslint-disable-next-line arrow-body-style
 const createAvatarId = () => {
   const avatarId = generatePhotoId();
 
   return String(avatarId).padStart(2, '0');
 };
 
-// eslint-disable-next-line arrow-body-style
 const createOffer = () => {
   const latitude = getRandomFloat(MIN_LAT, MAX_LAT, PRECISION_LAT);
   const longitude = getRandomFloat(MIN_LNG, MAX_LNG, PRECISION_LNG);
@@ -110,5 +108,4 @@ const createOffer = () => {
   };
 };
 
-const createAds = (amount) => Array.from({length: amount}, createOffer);
-createAds(SIMILAR_COUNT_MAX);
+export const createAds = (amount) => Array.from({length: amount}, createOffer);
