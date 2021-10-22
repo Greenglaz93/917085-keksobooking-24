@@ -3,14 +3,12 @@ const filters = document.querySelector('.map__filters');
 
 const deactivateForm = (form, formClass) => {
   form.classList.add(`${formClass}--disabled`);
-  const formChildrens = form.children;
-  formChildrens.disabled = true;
+  Array.from(form.children).forEach((element) => element.disabled = true);
 };
 
 const activateForm = (form, formClass) => {
   form.classList.remove(`${formClass}--disabled`);
-  const formChildrens = form.children;
-  formChildrens.disabled = false;
+  Array.from(form.children).forEach((element) => element.disabled = false);
 };
 
 export const makeActive = () => {
@@ -18,7 +16,7 @@ export const makeActive = () => {
   activateForm(filters, 'map__filters');
 };
 
-export const makeDeactive = () => {
+export const makeInactive = () => {
   deactivateForm(adForm, 'ad-form');
   deactivateForm(filters, 'map__filters');
 };
