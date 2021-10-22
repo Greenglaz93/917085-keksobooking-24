@@ -1,6 +1,6 @@
 import {pluralize} from './utils.js';
 
-const OFFER_TYPES = {
+const dictionary = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
   house: 'Дом',
@@ -14,6 +14,24 @@ const DECLENSION = {
 };
 
 const popup = document.querySelector('#card').content.querySelector('.popup');
+
+const renderFeatures = (features, cardFeatures) => {
+  features.forEach((element) => {
+    const feature = document.createElement('li');
+
+    feature.classList.add('popup__feature', `popup__feature--${element}`);
+    cardFeatures.append(feature);
+  });
+};
+
+const renderPhotos = (photos, cardPhotos, cardPhoto) => {
+  photos.forEach((element) => {
+    const photo = cardPhoto.cloneNode(true);
+
+    photo.src = element;
+    cardPhotos.append(photo);
+  });
+};
 
 export const renderPopup = ({author, offer}) => {
   const {
@@ -49,26 +67,24 @@ export const renderPopup = ({author, offer}) => {
   cardTitle.textContent = title;
   cardAddress.textContent = address;
   cardPrice.textContent = `${price} ₽/ночь`;
-  cardType.textContent = OFFER_TYPES[type];
+  cardType.textContent = dictionary[type];
   cardCapacity.textContent = `${rooms} ${pluralize(rooms, DECLENSION.rooms)} для ${String(guests)} ${pluralize(guests, DECLENSION.guests)}`;
   cardTime.textContent = `Заезд после ${checkin}, выезд до ${checkout}`;
   cardDescription.textContent = description;
 
-  cardFeatures.innerHTML = '';
-  features.forEach((element) => {
-    const feature = document.createElement('li');
+  if (features.length > 0) {
+    cardFeatures.innerHTML = '';
+    renderFeatures(features, cardFeatures);
+  } else {
+    cardFeatures.remove();
+  }
 
-    feature.classList.add('popup__feature', `popup__feature--${element}`);
-    feature.textContent = cardFeatures[element];
-    cardFeatures.append(feature);
-  });
-
-  cardPhotos.innerHTML = '';
-  photos.forEach((element) => {
-    const photo = cardPhoto.cloneNode(true);
-    photo.src = element;
-    cardPhotos.append(photo);
-  });
+  if (photos.length > 0) {
+    cardPhotos.innerHTML = '';
+    renderPhotos(photos, cardPhotos, cardPhoto);
+  } else {
+    cardFeatures.remove();
+  }
 
   return card;
 };
