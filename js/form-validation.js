@@ -18,6 +18,8 @@ const formPrice = adForm.querySelector('#price');
 const formType = adForm.querySelector('#type');
 const formCapacity = adForm.querySelector('#capacity');
 const formRooms = adForm.querySelector('#room_number');
+const formTimeIn = adForm.querySelector('#timein');
+const formTimeOut = adForm.querySelector('#timeout');
 
 const onTitleInput = () => {
   const valueLength = formTitle.value.length;
@@ -70,11 +72,21 @@ const checkCapacity = () => {
   formCapacity.reportValidity();
 };
 
+const onChangeTimeIn = () => formTimeOut.value = formTimeIn.value;
+const onChangeTimeOut = () => formTimeIn.value = formTimeOut.value;
+
+const syncTime = () => {
+  onChangeTimeIn();
+  onChangeTimeOut();
+};
+
 const onChangeCapacity = () => checkCapacity();
+
 
 const syncFields = () => {
   changeMinPrice();
   checkCapacity();
+  syncTime();
 };
 
 export const validateForm = () => {
@@ -89,4 +101,7 @@ export const validateForm = () => {
 
   formRooms.addEventListener('change', onChangeCapacity);
   formCapacity.addEventListener('change', onChangeCapacity);
+
+  formTimeIn.addEventListener('change', onChangeTimeIn);
+  formTimeOut.addEventListener('change', onChangeTimeOut);
 };
