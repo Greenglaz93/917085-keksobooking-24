@@ -27,12 +27,13 @@ const TILE_LAYER = 'https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.pn
 const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 const address = document.querySelector('#address');
 const mapCanvas = document.querySelector('.map__canvas');
+const resetBtn = document.querySelector('.ad-form__reset');
 
 const getAddressValue = () => {
   const {lat, lng, precision} = initial;
   address.value = `${lat.toFixed(precision)}, ${lng.toFixed(precision)}`;
 };
-getAddressValue();
+
 makeInactive();
 
 const map = L.map(mapCanvas)
@@ -64,6 +65,20 @@ const mainPinMarker = L.marker(
   {draggable: true, icon: mainPinIcon},
 );
 
+const setDefault = () => {
+  mainPinMarker.setLatLng({
+    lat: initial.lat,
+    lng: initial.lng,
+  });
+  map.setView({
+    lat: initial.lat,
+    lng: initial.lng,
+  }, initial.zoom);
+  getAddressValue();
+};
+
+resetBtn.addEventListener('click', setDefault);
+
 const createMarker = (point) => {
   const { lat, lng } = point.location;
 
@@ -80,6 +95,7 @@ const renderMarkers = (points) => points.forEach(createMarker);
 const ads = createAds(AMOUNT);
 
 export const initMap = () => {
+  getAddressValue();
   mainPinMarker.addTo(map);
   mainPinMarker.on('move', onAddressChange);
   renderMarkers(ads);
