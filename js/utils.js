@@ -32,7 +32,7 @@ export const createUniqueIdGeneratorFromRange = (min, max) => {
 
 export const getRandomArrayElement = (elements) => elements[getRandomIntInclusive(0, elements.length - 1)];
 
-const shuffle = (array) => {
+export const shuffle = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];

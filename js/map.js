@@ -1,13 +1,10 @@
-import { makeActive, makeInactive } from './form-activation.js';
-import { createAds } from './data.js';
+import { makeActive, makeInactive } from './activation.js';
 import { renderPopup } from './card.js';
-
-const AMOUNT = 10;
 
 const MapDefault = {
   LAT: 35.682272,
   LNG: 139.753137,
-  ZOOM: 10,
+  ZOOM: 13,
   PRECISION: 5,
 };
 
@@ -40,13 +37,9 @@ const mainPinMarker = L.marker(
   {draggable: true, icon: mainPinIcon},
 );
 
-const getAddressValue = () => {
-  address.value = `${MapDefault.LAT.toFixed(MapDefault.PRECISION)}, ${MapDefault.LNG.toFixed(MapDefault.PRECISION)}`;
-};
-
 makeInactive();
 
-const map = L.map(mapCanvas)
+export const map = L.map(mapCanvas)
   .on('load', () => {makeActive();})
   .setView({
     lat: MapDefault.LAT,
@@ -57,13 +50,6 @@ L.tileLayer(TILE_LAYER,{attribution: ATTRIBUTION}).addTo(map);
 
 const markerGroup = L.layerGroup().addTo(map);
 
-const onAddressChange = (evt) => {
-  const { PRECISION } = MapDefault;
-  const { lat, lng } = evt.target.getLatLng();
-
-  address.value = `${lat.toFixed(PRECISION)}, ${lng.toFixed(PRECISION)}`;
-};
-
 export const setDefault = () => {
   mainPinMarker.setLatLng({
     lat: MapDefault.LAT,
@@ -73,6 +59,15 @@ export const setDefault = () => {
     lat: MapDefault.LAT,
     lng: MapDefault.LNG,
   }, MapDefault.ZOOM);
+  map.closePopup();
+  address.value = `${MapDefault.LAT.toFixed(MapDefault.PRECISION)}, ${MapDefault.LNG.toFixed(MapDefault.PRECISION)}`;
+};
+
+const setAddressValue = () => {
+  mainPinMarker.on('move', (evt) => {
+    const mainMarkerAddress = (evt.target.getLatLng());
+    address.value = `${mainMarkerAddress.lat.toFixed(MapDefault.PRECISION)}, ${mainMarkerAddress.lng.toFixed(MapDefault.PRECISION)}`;
+  });
 };
 
 const createMarker = (point) => {
@@ -87,12 +82,10 @@ const createMarker = (point) => {
   L.marker({ lat, lng }, { icon }).addTo(markerGroup).bindPopup(renderPopup(point));
 };
 
-const renderMarkers = (points) => points.forEach(createMarker);
-const ads = createAds(AMOUNT);
+export const renderMarkers = (points) => points.forEach(createMarker);
 
 export const initMap = () => {
-  getAddressValue();
+  setDefault();
   mainPinMarker.addTo(map);
-  mainPinMarker.on('move', onAddressChange);
-  renderMarkers(ads);
+  setAddressValue();
 };

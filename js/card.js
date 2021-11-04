@@ -27,9 +27,13 @@ const renderFeatures = (features, cardFeatures) => {
 const renderPhotos = (photos, cardPhotos, cardPhoto) => {
   photos.forEach((element) => {
     const photo = cardPhoto.cloneNode(true);
-
-    photo.src = element;
-    cardPhotos.append(photo);
+    if (element) {
+      photo.src = element;
+      cardPhotos.append(photo);
+    } else {
+      photo.alt = '';
+      cardPhotos.classList.add('visually-hidden');
+    }
   });
 };
 
@@ -72,18 +76,18 @@ export const renderPopup = ({author, offer}) => {
   cardTime.textContent = `Заезд после ${checkin}, выезд до ${checkout}`;
   cardDescription.textContent = description;
 
-  if (features.length > 0) {
+  if (!features) {
+    cardFeatures.remove();
+  } else {
     cardFeatures.innerHTML = '';
     renderFeatures(features, cardFeatures);
-  } else {
-    cardFeatures.remove();
   }
 
-  if (photos.length > 0) {
+  if (!photos) {
+    cardFeatures.remove();
+  } else {
     cardPhotos.innerHTML = '';
     renderPhotos(photos, cardPhotos, cardPhoto);
-  } else {
-    cardFeatures.remove();
   }
 
   return card;

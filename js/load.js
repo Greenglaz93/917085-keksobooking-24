@@ -1,21 +1,18 @@
-export const getData = (onSuccess, onError) =>
+export const getData = () =>
   fetch('https://24.javascript.pages.academy/keksobooking/data',
     {
       method: 'GET',
-      credentials: 'same-origin',
     },
   )
     .then((response) => {
       if (response.ok) {
         return response.json();
       }
+
       throw new Error('Ошибка загрузки');
     })
-    .then((data) => {
-      onSuccess(data);
-    })
-    .catch((err) => {
-      onError(err);
+    .catch(() => {
+      throw new Error('Ошибка загрузки');
     });
 
 export const sendData = (onSuccess, onFail, body) => {
