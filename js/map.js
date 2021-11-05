@@ -1,5 +1,8 @@
 import { makeActive, makeInactive } from './activation.js';
 import { renderPopup } from './card.js';
+// import { setFilterListener } from './filter.js';
+import { getData } from './api.js';
+import { showErrorMsg } from './utils.js';
 
 const MapDefault = {
   LAT: 35.682272,
@@ -20,6 +23,8 @@ const Pin = {
   SRC: '../img/pin.svg',
 };
 
+const AMOUNT = 10;
+const ERROR_MESSAGE = 'Ошибка загрузки данных';
 const TILE_LAYER = 'https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png';
 const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
@@ -39,8 +44,7 @@ const mainPinMarker = L.marker(
 
 makeInactive();
 
-export const map = L.map(mapCanvas)
-  .on('load', () => {makeActive();})
+const map = L.map(mapCanvas)
   .setView({
     lat: MapDefault.LAT,
     lng: MapDefault.LNG,
@@ -84,8 +88,21 @@ const createMarker = (point) => {
 
 export const renderMarkers = (points) => points.forEach(createMarker);
 
+const onDataLoad = (ads) => {
+  renderMarkers(ads.slice(0, AMOUNT));
+  // setFilterListener(ads);
+};
+
+const onDataFail = () => {
+  showErrorMsg(ERROR_MESSAGE);
+};
+
 export const initMap = () => {
   setDefault();
+  map.whenReady(() => {
+    makeActive();
+    getData(onDataLoad, onDataFail);
+  });
   mainPinMarker.addTo(map);
   setAddressValue();
 };

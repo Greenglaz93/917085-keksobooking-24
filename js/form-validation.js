@@ -1,4 +1,3 @@
-
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_PRICE = 1000000;
@@ -92,12 +91,10 @@ const syncFields = () => {
 export const validateForm = () => {
   syncFields();
 
-  formTitle.addEventListener('invalid', onTitleInput);
   formTitle.addEventListener('input', onTitleInput);
 
   formType.addEventListener('change', onChangePrice);
-  formPrice.addEventListener('invalid', onPriceInput);
-  formPrice.addEventListener('input', onPriceInput);
+  formPrice.addEventListener('change', onPriceInput);
 
   formRooms.addEventListener('change', onChangeCapacity);
   formCapacity.addEventListener('change', onChangeCapacity);

@@ -1,5 +1,8 @@
-export const getData = () =>
-  fetch('https://24.javascript.pages.academy/keksobooking/data',
+const API_URL = 'https://24.javascript.pages.academy/keksobooking';
+
+export const getData = (onSuccess, onFail) => {
+  fetch(
+    `${API_URL}/data`,
     {
       method: 'GET',
     },
@@ -8,15 +11,17 @@ export const getData = () =>
       if (response.ok) {
         return response.json();
       }
-
-      throw new Error('Ошибка загрузки');
     })
+    .then((data) => onSuccess(data))
     .catch(() => {
-      throw new Error('Ошибка загрузки');
+      onFail();
     });
+};
+
 
 export const sendData = (onSuccess, onFail, body) => {
-  fetch('https://24.javascript.pages.academy/keksobooking',
+  fetch(
+    API_URL,
     {
       method: 'POST',
       body,
@@ -28,5 +33,7 @@ export const sendData = (onSuccess, onFail, body) => {
         onFail();
       }
     })
-    .catch(onFail);
+    .catch(() => {
+      onFail();
+    });
 };

@@ -1,3 +1,5 @@
+const ERROR_SHOW_TIME = 3000;
+
 export const getRandomIntInclusive = (min, max) => {
   const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
   const upper = Math.floor(Math.max(Math.abs(min), Math.abs(max)));
@@ -51,3 +53,25 @@ export const createRandomLengthArray = (array) => {
 export function pluralize(number, words) {
   return words[(number % 100 > 4 && number % 100 < 20) ? 2 : [2, 0, 1, 1, 1, 2][(number % 10 < 5) ? Math.abs(number) % 10 : 5]];
 }
+
+export const showErrorMsg = (message) => {
+  const container = document.createElement('div');
+
+  container.style.zIndex = 100;
+  container.style.position = 'absolute';
+  container.style.left = 0;
+  container.style.top = 0;
+  container.style.right = 0;
+  container.style.padding = '10px 3px';
+  container.style.fontSize = '26px';
+  container.style.textAlign = 'center';
+  container.style.backgroundColor = 'red';
+  container.style.color = 'white';
+  container.textContent = message;
+
+  document.body.append(container);
+
+  setTimeout(() => {
+    container.remove();
+  }, ERROR_SHOW_TIME);
+};

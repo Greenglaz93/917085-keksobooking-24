@@ -1,4 +1,4 @@
-import { sendData } from './load.js';
+import { sendData } from './api.js';
 import { setDefault } from './map.js';
 
 const adForm = document.querySelector('.ad-form');
@@ -8,15 +8,22 @@ const resetBtn = adForm.querySelector('.ad-form__reset');
 
 const isEscKey = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
-const onMessage = (message) => {
-  message.addEventListener('click', () => {
-    message.remove();
-  }, {once: true});
-  document.addEventListener('keydown', (evt) => {
+const renderMessage = (node) => {
+  const onClose = () => {
+    node.remove();
+    document.removeEventListener('keydown', onDocumentKeyDown);
+  };
+
+  function onDocumentKeyDown(evt) {
     if (isEscKey(evt)) {
-      message.remove();
+      onClose();
     }
-  }, {once: true});
+  }
+
+  const onNodeClick = () => onClose();
+
+  node.addEventListener('click', onNodeClick);
+  document.addEventListener('keydown', onDocumentKeyDown);
 };
 
 export const onFormReset = () => {
@@ -29,21 +36,25 @@ export const onFormReset = () => {
 const showSuccessMsg = () => {
   const success = successMsgTemplate.cloneNode(true);
   document.body.appendChild(success);
-  onMessage(success);
-  adForm.reset();
-  setDefault();
+  renderMessage(success);
 };
 
 const showErrorMsg = () => {
   const error = errorMsgTemplate.cloneNode(true);
   document.body.appendChild(error);
-  onMessage(error);
+  renderMessage(error);
+};
+
+const onSendSuccess = () => {
+  showSuccessMsg();
+  adForm.reset();
+  setDefault();
 };
 
 export const onFormSubmit = () => {
   adForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const formData = new FormData(evt.target);
-    sendData(showSuccessMsg, showErrorMsg, formData);
+    sendData(onSendSuccess, showErrorMsg, formData);
   });
 };
