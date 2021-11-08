@@ -1,6 +1,6 @@
 import { makeActive, makeInactive } from './activation.js';
 import { renderPopup } from './card.js';
-// import { setFilterListener } from './filter.js';
+import { setFilterListener } from './filter.js';
 import { getData } from './api.js';
 import { showErrorMsg } from './utils.js';
 
@@ -86,11 +86,13 @@ const createMarker = (point) => {
   L.marker({ lat, lng }, { icon }).addTo(markerGroup).bindPopup(renderPopup(point));
 };
 
+export const clearMarkers = () => markerGroup.clearLayers();
+
 export const renderMarkers = (points) => points.forEach(createMarker);
 
 const onDataLoad = (ads) => {
   renderMarkers(ads.slice(0, AMOUNT));
-  // setFilterListener(ads);
+  setFilterListener(ads);
 };
 
 const onDataFail = () => {

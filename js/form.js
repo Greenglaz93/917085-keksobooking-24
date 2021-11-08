@@ -1,5 +1,6 @@
 import { sendData } from './api.js';
-import { setDefault } from './map.js';
+import { resetFilters } from './filter.js';
+import { clearMarkers, initMap, setDefault } from './map.js';
 
 const adForm = document.querySelector('.ad-form');
 const successMsgTemplate = document.querySelector('#success').content.querySelector('.success');
@@ -26,12 +27,15 @@ const renderMessage = (node) => {
   document.addEventListener('keydown', onDocumentKeyDown);
 };
 
+
 export const onFormReset = () => {
-  resetBtn.addEventListener('click', () => {
-    adForm.reset();
-    setDefault();
-  });
+  adForm.reset();
+  resetFilters();
+  clearMarkers();
+  initMap();
 };
+
+resetBtn.addEventListener('click', onFormReset);
 
 const showSuccessMsg = () => {
   const success = successMsgTemplate.cloneNode(true);
