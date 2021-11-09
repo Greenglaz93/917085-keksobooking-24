@@ -1,6 +1,6 @@
 import { makeActive, makeInactive } from './activation.js';
 import { renderPopup } from './card.js';
-// import { setFilterListener } from './filter.js';
+import { setFilterListener, resetFilters } from './filter.js';
 import { getData } from './api.js';
 import { showErrorMsg } from './utils.js';
 
@@ -54,6 +54,10 @@ L.tileLayer(TILE_LAYER,{attribution: ATTRIBUTION}).addTo(map);
 
 const markerGroup = L.layerGroup().addTo(map);
 
+const setAddressValue = () => {
+  address.value = `${MapDefault.LAT.toFixed(MapDefault.PRECISION)}, ${MapDefault.LNG.toFixed(MapDefault.PRECISION)}`;
+};
+
 export const setDefault = () => {
   mainPinMarker.setLatLng({
     lat: MapDefault.LAT,
@@ -64,14 +68,12 @@ export const setDefault = () => {
     lng: MapDefault.LNG,
   }, MapDefault.ZOOM);
   map.closePopup();
-  address.value = `${MapDefault.LAT.toFixed(MapDefault.PRECISION)}, ${MapDefault.LNG.toFixed(MapDefault.PRECISION)}`;
+  setAddressValue();
 };
 
-const setAddressValue = () => {
-  mainPinMarker.on('move', (evt) => {
-    const mainMarkerAddress = (evt.target.getLatLng());
-    address.value = `${mainMarkerAddress.lat.toFixed(MapDefault.PRECISION)}, ${mainMarkerAddress.lng.toFixed(MapDefault.PRECISION)}`;
-  });
+const onAddressChange = (evt) => {
+  const { lat, lng } = evt.target.getLatLng();
+  address.value = `${lat.toFixed(MapDefault.PRECISION)}, ${lng.toFixed(MapDefault.PRECISION)}`;
 };
 
 const createMarker = (point) => {
@@ -86,15 +88,22 @@ const createMarker = (point) => {
   L.marker({ lat, lng }, { icon }).addTo(markerGroup).bindPopup(renderPopup(point));
 };
 
+export const clearMarkers = () => markerGroup.clearLayers();
+
 export const renderMarkers = (points) => points.forEach(createMarker);
 
 const onDataLoad = (ads) => {
   renderMarkers(ads.slice(0, AMOUNT));
-  // setFilterListener(ads);
+  setFilterListener(ads);
 };
 
 const onDataFail = () => {
   showErrorMsg(ERROR_MESSAGE);
+};
+
+export const resetMapForm = () => {
+  setDefault();
+  resetFilters();
 };
 
 export const initMap = () => {
@@ -104,5 +113,5 @@ export const initMap = () => {
     getData(onDataLoad, onDataFail);
   });
   mainPinMarker.addTo(map);
-  setAddressValue();
+  mainPinMarker.on('move', onAddressChange);
 };
