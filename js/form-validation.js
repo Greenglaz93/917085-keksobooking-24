@@ -34,7 +34,7 @@ const onTitleInput = () => {
   formTitle.reportValidity();
 };
 
-const changeMinPrice = () => {
+export const changeMinPrice = () => {
   formPrice.min = priceType[formType.value];
   formPrice.placeholder = priceType[formType.value];
 };

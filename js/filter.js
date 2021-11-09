@@ -1,9 +1,9 @@
+import { resetBtn } from './form.js';
 import { renderMarkers, clearMarkers } from './map.js';
 import { debounce } from './utils/debounce.js';
 
 const AMOUNT = 10;
 const DEFAULT_VALUE = 'any';
-const DELAY = 500;
 
 const priceFilterRange = {
   low: {
@@ -16,6 +16,7 @@ const priceFilterRange = {
   },
   high: {
     min: 50000,
+    max: 1000000,
   },
 };
 
@@ -27,26 +28,17 @@ const guestsSelect = mapFilters.querySelector('#housing-guests');
 
 export const resetFilters = () => mapFilters.reset();
 
-const filterByType = ({ offer }) => {
-  if (typeSelect.value !== DEFAULT_VALUE && typeSelect.value !== offer.type) {
-    return false;
-  }
-  return true;
-};
+const filterByType = ({ offer }) => (
+  typeSelect.value === DEFAULT_VALUE || typeSelect.value === offer.type
+);
 
-const filterByRooms = ({ offer }) => {
-  if (roomsSelect.value !== DEFAULT_VALUE && roomsSelect.value !== String(offer.rooms)) {
-    return false;
-  }
-  return true;
-};
+const filterByRooms = ({ offer }) => (
+  roomsSelect.value === DEFAULT_VALUE || roomsSelect.value === String(offer.rooms)
+);
 
-const filterByGuests = ({ offer }) => {
-  if (guestsSelect.value !== DEFAULT_VALUE && guestsSelect.value !== String(offer.guests)) {
-    return false;
-  }
-  return true;
-};
+const filterByGuests = ({ offer }) => (
+  guestsSelect.value === DEFAULT_VALUE || guestsSelect.value === String(offer.guests)
+);
 
 const filterByPrice = ({ offer }) => {
   const offerPriceType = priceSelect.value;
@@ -61,33 +53,31 @@ const filterByPrice = ({ offer }) => {
     case 'middle':
       return offer.price >= priceFilterRange.middle.min && offer.price <= priceFilterRange.middle.max;
     case 'high':
-      return offer.price > priceFilterRange.high.min;
+      return offer.price > priceFilterRange.high.min && offer.price < priceFilterRange.high.max;
   }
 };
 
 const filterByFeatures = ({ offer }) => {
-  const featuresChecked = mapFilters.querySelectorAll('input[name="features"]:checked');
-  if (!featuresChecked.length) {
+  const checkedFeatures = mapFilters.querySelectorAll('.map__checkbox:checked');
+
+  if (checkedFeatures.length === 0) {
     return true;
   }
+
   if (!offer.features) {
     return false;
   }
 
-  let featuresCount = 0;
-  featuresChecked.forEach((feature) => {
-    if (offer.features.includes(feature.value)) {
-      featuresCount++;
-    }
-  });
-  return featuresCount === featuresChecked.length;
+  return Array.from(checkedFeatures).every((feature) => offer.features.includes(feature.value));
 };
 
-const filterMarkers = (ads) => ads.filter((item) => filterByType(item)
+const filterMarkers = (ads) => ads.filter((item) => (
+  filterByType(item)
   && filterByRooms(item)
   && filterByGuests(item)
   && filterByPrice(item)
-  && filterByFeatures(item));
+  && filterByFeatures(item)
+));
 
 const onFilterChange = (data) => {
   const filteredData = filterMarkers(data);
@@ -96,6 +86,6 @@ const onFilterChange = (data) => {
 };
 
 export const setFilterListener = (ads) => {
-  mapFilters.addEventListener('change', () => {
-    debounce(onFilterChange(ads), DELAY);});
+  mapFilters.addEventListener('change', debounce(() => onFilterChange(ads)));
+  resetBtn.addEventListener('click', () => onFilterChange(ads));
 };

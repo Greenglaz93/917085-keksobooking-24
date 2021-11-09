@@ -1,11 +1,20 @@
 import { sendData } from './api.js';
-import { resetFilters } from './filter.js';
-import { clearMarkers, initMap, setDefault } from './map.js';
+import {  resetMapForm } from './map.js';
+import { changeMinPrice } from './form-validation.js';
 
 const adForm = document.querySelector('.ad-form');
+const formTitle = adForm.querySelector('#title');
+const formPrice = adForm.querySelector('#price');
+const formType = adForm.querySelector('#type');
+const formCapacity = adForm.querySelector('#capacity');
+const formRooms = adForm.querySelector('#room_number');
+const formTimeIn = adForm.querySelector('#timein');
+const formTimeOut = adForm.querySelector('#timeout');
+const formDescription = adForm.querySelector('#description');
+const formFeatures = adForm.querySelectorAll('.features input');
 const successMsgTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorMsgTemplate = document.querySelector('#error').content.querySelector('.error');
-const resetBtn = adForm.querySelector('.ad-form__reset');
+export const resetBtn = adForm.querySelector('.ad-form__reset');
 
 const isEscKey = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
@@ -27,15 +36,29 @@ const renderMessage = (node) => {
   document.addEventListener('keydown', onDocumentKeyDown);
 };
 
-
-export const onFormReset = () => {
-  adForm.reset();
-  resetFilters();
-  clearMarkers();
-  initMap();
+const resetAdForm = () => {
+  formTitle.value = '';
+  formType.selectedIndex = 1;
+  formPrice.value = '';
+  formRooms.selectedIndex = 0;
+  formCapacity.selectedIndex = 0;
+  formDescription.value = '';
+  formTimeIn.selectedIndex = 0;
+  formTimeOut.selectedIndex = 0;
+  formFeatures.forEach((feature) => feature.checked = false);
+  formDescription.value = '';
+  changeMinPrice();
 };
 
-resetBtn.addEventListener('click', onFormReset);
+export const resetForms = () => {
+  resetAdForm();
+  resetMapForm();
+};
+
+resetBtn.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  resetForms();
+});
 
 const showSuccessMsg = () => {
   const success = successMsgTemplate.cloneNode(true);
@@ -51,8 +74,7 @@ const showErrorMsg = () => {
 
 const onSendSuccess = () => {
   showSuccessMsg();
-  adForm.reset();
-  setDefault();
+  resetForms();
 };
 
 export const onFormSubmit = () => {
