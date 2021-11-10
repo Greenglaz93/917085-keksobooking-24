@@ -1,17 +1,9 @@
 import { sendData } from './api.js';
 import {  resetMapForm } from './map.js';
 import { changeMinPrice } from './form-validation.js';
+import { clearPreviews } from './previews.js';
 
 const adForm = document.querySelector('.ad-form');
-const formTitle = adForm.querySelector('#title');
-const formPrice = adForm.querySelector('#price');
-const formType = adForm.querySelector('#type');
-const formCapacity = adForm.querySelector('#capacity');
-const formRooms = adForm.querySelector('#room_number');
-const formTimeIn = adForm.querySelector('#timein');
-const formTimeOut = adForm.querySelector('#timeout');
-const formDescription = adForm.querySelector('#description');
-const formFeatures = adForm.querySelectorAll('.features input');
 const successMsgTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorMsgTemplate = document.querySelector('#error').content.querySelector('.error');
 export const resetBtn = adForm.querySelector('.ad-form__reset');
@@ -37,17 +29,9 @@ const renderMessage = (node) => {
 };
 
 const resetAdForm = () => {
-  formTitle.value = '';
-  formType.selectedIndex = 1;
-  formPrice.value = '';
-  formRooms.selectedIndex = 0;
-  formCapacity.selectedIndex = 0;
-  formDescription.value = '';
-  formTimeIn.selectedIndex = 0;
-  formTimeOut.selectedIndex = 0;
-  formFeatures.forEach((feature) => feature.checked = false);
-  formDescription.value = '';
+  adForm.reset();
   changeMinPrice();
+  clearPreviews();
 };
 
 export const resetForms = () => {

@@ -81,7 +81,6 @@ const syncTime = () => {
 
 const onChangeCapacity = () => checkCapacity();
 
-
 const syncFields = () => {
   changeMinPrice();
   checkCapacity();
