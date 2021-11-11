@@ -11,9 +11,8 @@ const activateForm = (form, formClass) => {
   Array.from(form.children).forEach((element) => element.disabled = false);
 };
 
-const makeActive = () => {
-  activateForm(adForm, 'ad-form');
-  activateForm(filters, 'map__filters');
+const makeActive = (form, formClass) => {
+  activateForm(form, formClass);
 };
 
 const makeInactive = () => {
