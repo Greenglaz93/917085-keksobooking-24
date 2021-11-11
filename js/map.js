@@ -98,7 +98,7 @@ const onDataLoad = (ads) => {
 };
 
 const onDataFail = () => {
-  showErrorMsg(ERROR_MESSAGE, 0);
+  showErrorMsg(ERROR_MESSAGE);
 };
 
 const initMap = () => {
