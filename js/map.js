@@ -93,7 +93,7 @@ const clearMarkers = () => markerGroup.clearLayers();
 const renderMarkers = (points) => points.forEach(createMarker);
 
 const onDataLoad = (ads) => {
-  makeActive(mapFilters, '.map__filters');
+  makeActive(mapFilters, 'map__filters');
   renderMarkers(ads.slice(0, AMOUNT));
   setFilterListener(ads);
 };
@@ -105,7 +105,7 @@ const onDataFail = () => {
 const initMap = () => {
   setDefault();
   map.whenReady(() => {
-    makeActive(adForm, '.ad-form');
+    makeActive(adForm, 'ad-form');
     getData(onDataLoad, onDataFail);
   });
   mainPinMarker.addTo(map);
