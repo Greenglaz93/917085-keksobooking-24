@@ -11,6 +11,7 @@ const getData = (onSuccess, onFail) => {
       if (response.ok) {
         return response.json();
       }
+      throw new Error();
     })
     .then((data) => onSuccess(data))
     .catch(() => {

@@ -1,4 +1,4 @@
-import { makeActive, makeInactive } from './activation.js';
+import { makeActive } from './activation.js';
 import { renderPopup } from './card.js';
 import { setFilterListener } from './filter.js';
 import { getData } from './api.js';
@@ -30,6 +30,8 @@ const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">Op
 
 const address = document.querySelector('#address');
 const mapCanvas = document.querySelector('.map__canvas');
+const adForm = document.querySelector('.ad-form');
+const mapFilters = document.querySelector('.map__filters');
 
 const mainPinIcon = L.icon({
   iconUrl: MainPin.SRC,
@@ -41,8 +43,6 @@ const mainPinMarker = L.marker(
   {lat: MapDefault.LAT, lng: MapDefault.LNG},
   {draggable: true, icon: mainPinIcon},
 );
-
-makeInactive();
 
 const map = L.map(mapCanvas)
   .setView({
@@ -93,6 +93,7 @@ const clearMarkers = () => markerGroup.clearLayers();
 const renderMarkers = (points) => points.forEach(createMarker);
 
 const onDataLoad = (ads) => {
+  makeActive(mapFilters, 'map__filters');
   renderMarkers(ads.slice(0, AMOUNT));
   setFilterListener(ads);
 };
@@ -104,7 +105,7 @@ const onDataFail = () => {
 const initMap = () => {
   setDefault();
   map.whenReady(() => {
-    makeActive();
+    makeActive(adForm, 'ad-form');
     getData(onDataLoad, onDataFail);
   });
   mainPinMarker.addTo(map);
