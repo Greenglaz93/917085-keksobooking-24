@@ -1,6 +1,4 @@
-const ERROR_SHOW_TIME = 3000;
-
-export const getRandomIntInclusive = (min, max) => {
+const getRandomIntInclusive = (min, max) => {
   const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
   const upper = Math.floor(Math.max(Math.abs(min), Math.abs(max)));
   const result = Math.floor(Math.random() * (upper - lower + 1)) + lower;
@@ -8,7 +6,7 @@ export const getRandomIntInclusive = (min, max) => {
   return result;
 };
 
-export const getRandomFloat = (min, max, precision = 2) => {
+const getRandomFloat = (min, max, precision = 2) => {
   const lower = Math.min(Math.abs(min), Math.abs(max));
   const upper = Math.max(Math.abs(min), Math.abs(max));
   const result = Math.random() * (upper - lower) + lower;
@@ -16,7 +14,7 @@ export const getRandomFloat = (min, max, precision = 2) => {
   return parseFloat(result.toFixed(precision));
 };
 
-export const createUniqueIdGeneratorFromRange = (min, max) => {
+const createUniqueIdGeneratorFromRange = (min, max) => {
   const previousValues = [];
 
   return function () {
@@ -32,9 +30,9 @@ export const createUniqueIdGeneratorFromRange = (min, max) => {
   };
 };
 
-export const getRandomArrayElement = (elements) => elements[getRandomIntInclusive(0, elements.length - 1)];
+const getRandomArrayElement = (elements) => elements[getRandomIntInclusive(0, elements.length - 1)];
 
-export const shuffle = (array) => {
+const shuffle = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
@@ -43,27 +41,33 @@ export const shuffle = (array) => {
   return array;
 };
 
-export const createRandomLengthArray = (array) => {
+const createRandomLengthArray = (array) => {
   const newArray = array.slice();
   const randomNumber = getRandomIntInclusive(1, newArray.length);
 
   return shuffle(newArray).slice(0, randomNumber);
 };
 
-export function pluralize(number, words) {
+function pluralize(number, words) {
   return words[(number % 100 > 4 && number % 100 < 20) ? 2 : [2, 0, 1, 1, 1, 2][(number % 10 < 5) ? Math.abs(number) % 10 : 5]];
 }
 
-export const showErrorMsg = (message) => {
+const showErrorMsg = (message) => {
   const container = document.createElement('div');
+  const SHOW_ERROR_TIME = 3000;
 
-  container.style.zIndex = 100;
-  container.style.position = 'absolute';
+  container.style.zIndex = 999;
+  container.style.position = 'fixed';
   container.style.left = 0;
-  container.style.top = 0;
+  container.style.top = '10px';
   container.style.right = 0;
-  container.style.padding = '10px 3px';
-  container.style.fontSize = '26px';
+  container.style.margin = '0 auto';
+  container.style.paddingTop = '20px';
+  container.style.height = '80px';
+  container.style.maxWidth = '600px';
+  container.style.border = '4px solid red';
+  container.style.borderRadius = '20px';
+  container.style.fontSize = '30px';
   container.style.textAlign = 'center';
   container.style.backgroundColor = 'red';
   container.style.color = 'white';
@@ -73,5 +77,16 @@ export const showErrorMsg = (message) => {
 
   setTimeout(() => {
     container.remove();
-  }, ERROR_SHOW_TIME);
+  }, SHOW_ERROR_TIME);
+};
+
+export {
+  getRandomIntInclusive,
+  getRandomFloat,
+  createUniqueIdGeneratorFromRange,
+  getRandomArrayElement,
+  shuffle,
+  createRandomLengthArray,
+  pluralize,
+  showErrorMsg
 };

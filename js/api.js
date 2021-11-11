@@ -1,6 +1,6 @@
 const API_URL = 'https://24.javascript.pages.academy/keksobooking';
 
-export const getData = (onSuccess, onFail) => {
+const getData = (onSuccess, onFail) => {
   fetch(
     `${API_URL}/data`,
     {
@@ -18,8 +18,7 @@ export const getData = (onSuccess, onFail) => {
     });
 };
 
-
-export const sendData = (onSuccess, onFail, body) => {
+const sendData = (onSuccess, onFail, body) => {
   fetch(
     API_URL,
     {
@@ -36,4 +35,9 @@ export const sendData = (onSuccess, onFail, body) => {
     .catch(() => {
       onFail();
     });
+};
+
+export {
+  getData,
+  sendData
 };

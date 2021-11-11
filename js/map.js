@@ -1,6 +1,6 @@
 import { makeActive, makeInactive } from './activation.js';
 import { renderPopup } from './card.js';
-import { setFilterListener, resetFilters } from './filter.js';
+import { setFilterListener } from './filter.js';
 import { getData } from './api.js';
 import { showErrorMsg } from './utils.js';
 
@@ -58,7 +58,7 @@ const setAddressValue = () => {
   address.value = `${MapDefault.LAT.toFixed(MapDefault.PRECISION)}, ${MapDefault.LNG.toFixed(MapDefault.PRECISION)}`;
 };
 
-export const setDefault = () => {
+const setDefault = () => {
   mainPinMarker.setLatLng({
     lat: MapDefault.LAT,
     lng: MapDefault.LNG,
@@ -88,9 +88,9 @@ const createMarker = (point) => {
   L.marker({ lat, lng }, { icon }).addTo(markerGroup).bindPopup(renderPopup(point));
 };
 
-export const clearMarkers = () => markerGroup.clearLayers();
+const clearMarkers = () => markerGroup.clearLayers();
 
-export const renderMarkers = (points) => points.forEach(createMarker);
+const renderMarkers = (points) => points.forEach(createMarker);
 
 const onDataLoad = (ads) => {
   renderMarkers(ads.slice(0, AMOUNT));
@@ -101,12 +101,7 @@ const onDataFail = () => {
   showErrorMsg(ERROR_MESSAGE);
 };
 
-export const resetMapForm = () => {
-  setDefault();
-  resetFilters();
-};
-
-export const initMap = () => {
+const initMap = () => {
   setDefault();
   map.whenReady(() => {
     makeActive();
@@ -114,4 +109,11 @@ export const initMap = () => {
   });
   mainPinMarker.addTo(map);
   mainPinMarker.on('move', onAddressChange);
+};
+
+export {
+  setDefault,
+  clearMarkers,
+  renderMarkers,
+  initMap
 };
