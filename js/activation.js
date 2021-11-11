@@ -11,12 +11,17 @@ const activateForm = (form, formClass) => {
   Array.from(form.children).forEach((element) => element.disabled = false);
 };
 
-export const makeActive = () => {
+const makeActive = () => {
   activateForm(adForm, 'ad-form');
   activateForm(filters, 'map__filters');
 };
 
-export const makeInactive = () => {
+const makeInactive = () => {
   deactivateForm(adForm, 'ad-form');
   deactivateForm(filters, 'map__filters');
+};
+
+export {
+  makeActive,
+  makeInactive
 };

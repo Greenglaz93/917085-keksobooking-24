@@ -1,12 +1,13 @@
 import { sendData } from './api.js';
-import {  resetMapForm } from './map.js';
-import { changeMinPrice } from './form-validation.js';
+import {  setDefault } from './map.js';
+import { changeMinPrice, checkCapacity } from './form-validation.js';
 import { clearPreviews } from './previews.js';
 
 const adForm = document.querySelector('.ad-form');
+const mapFilters = document.querySelector('.map__filters');
 const successMsgTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorMsgTemplate = document.querySelector('#error').content.querySelector('.error');
-export const resetBtn = adForm.querySelector('.ad-form__reset');
+const resetBtn = adForm.querySelector('.ad-form__reset');
 
 const isEscKey = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
@@ -30,19 +31,15 @@ const renderMessage = (node) => {
 
 const resetAdForm = () => {
   adForm.reset();
+  mapFilters.reset();
   changeMinPrice();
   clearPreviews();
 };
 
-export const resetForms = () => {
+const resetForms = () => {
   resetAdForm();
-  resetMapForm();
+  setDefault();
 };
-
-resetBtn.addEventListener('click', (evt) => {
-  evt.preventDefault();
-  resetForms();
-});
 
 const showSuccessMsg = () => {
   const success = successMsgTemplate.cloneNode(true);
@@ -61,10 +58,24 @@ const onSendSuccess = () => {
   resetForms();
 };
 
-export const onFormSubmit = () => {
+const onFormSubmit = () => {
   adForm.addEventListener('submit', (evt) => {
+    checkCapacity();
     evt.preventDefault();
-    const formData = new FormData(evt.target);
-    sendData(onSendSuccess, showErrorMsg, formData);
+
+    if (adForm.checkValidity()) {
+      const formData = new FormData(evt.target);
+      sendData(onSendSuccess, showErrorMsg, formData);
+    }
   });
+};
+
+resetBtn.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  resetForms();
+});
+
+export {
+  resetForms,
+  onFormSubmit
 };

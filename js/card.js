@@ -1,4 +1,4 @@
-import {pluralize} from './utils.js';
+import { pluralize } from './utils.js';
 
 const dictionary = {
   flat: 'Квартира',
@@ -27,6 +27,7 @@ const renderFeatures = (features, cardFeatures) => {
 const renderPhotos = (photos, cardPhotos, cardPhoto) => {
   photos.forEach((element) => {
     const photo = cardPhoto.cloneNode(true);
+
     if (element) {
       photo.src = element;
       cardPhotos.append(photo);
@@ -37,7 +38,7 @@ const renderPhotos = (photos, cardPhotos, cardPhoto) => {
   });
 };
 
-export const renderPopup = ({author, offer}) => {
+const renderPopup = ({author, offer}) => {
   const {
     title,
     address,
@@ -92,3 +93,5 @@ export const renderPopup = ({author, offer}) => {
 
   return card;
 };
+
+export { renderPopup };

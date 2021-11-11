@@ -1,4 +1,3 @@
-import { resetBtn } from './form.js';
 import { renderMarkers, clearMarkers } from './map.js';
 import { debounce } from './utils/debounce.js';
 
@@ -25,8 +24,6 @@ const typeSelect = mapFilters.querySelector('#housing-type');
 const priceSelect = mapFilters.querySelector('#housing-price');
 const roomsSelect = mapFilters.querySelector('#housing-rooms');
 const guestsSelect = mapFilters.querySelector('#housing-guests');
-
-export const resetFilters = () => mapFilters.reset();
 
 const filterByType = ({ offer }) => (
   typeSelect.value === DEFAULT_VALUE || typeSelect.value === offer.type
@@ -85,7 +82,9 @@ const onFilterChange = (data) => {
   renderMarkers(filteredData.slice(0, AMOUNT));
 };
 
-export const setFilterListener = (ads) => {
+const setFilterListener = (ads) => {
   mapFilters.addEventListener('change', debounce(() => onFilterChange(ads)));
-  resetBtn.addEventListener('click', () => onFilterChange(ads));
+  mapFilters.addEventListener('reset', debounce(() => onFilterChange(ads)));
 };
+
+export { setFilterListener };

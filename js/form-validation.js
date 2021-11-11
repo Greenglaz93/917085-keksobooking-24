@@ -22,6 +22,7 @@ const formTimeOut = adForm.querySelector('#timeout');
 
 const onTitleInput = () => {
   const valueLength = formTitle.value.length;
+
   if (valueLength === 0) {
     formTitle.setCustomValidity('Минимальная длина заголовка - 30 символов!');
   } else if (valueLength < MIN_TITLE_LENGTH) {
@@ -34,7 +35,7 @@ const onTitleInput = () => {
   formTitle.reportValidity();
 };
 
-export const changeMinPrice = () => {
+const changeMinPrice = () => {
   formPrice.min = priceType[formType.value];
   formPrice.placeholder = priceType[formType.value];
 };
@@ -83,11 +84,10 @@ const onChangeCapacity = () => checkCapacity();
 
 const syncFields = () => {
   changeMinPrice();
-  checkCapacity();
   syncTime();
 };
 
-export const validateForm = () => {
+const validateForm = () => {
   syncFields();
 
   formTitle.addEventListener('input', onTitleInput);
@@ -100,4 +100,10 @@ export const validateForm = () => {
 
   formTimeIn.addEventListener('change', onChangeTimeIn);
   formTimeOut.addEventListener('change', onChangeTimeOut);
+};
+
+export {
+  changeMinPrice,
+  checkCapacity,
+  validateForm
 };

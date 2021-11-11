@@ -1,4 +1,6 @@
-const AcceptedFileTypes = [
+import { showErrorMsg } from './utils.js';
+
+const ACCEPTED_FILE_TYPES = [
   'image/apng',
   'image/avif',
   'image/gif',
@@ -13,45 +15,47 @@ const AcceptedFileTypes = [
 ];
 
 const DEFAULT_AVATAR_URL = 'img/muffin-grey.svg';
+const ERROR_MESSAGE = 'Неподдерживаемый формат файла';
 
 const avatarInput = document.querySelector('.ad-form-header__input');
 const avatarPreview = document.querySelector('.ad-form-header__preview img');
-// const photoInput = document.querySelector('.ad-form__input');
-// const photosPreviewContainer = document.querySelector('.ad-form__photo');
+const photoInput = document.querySelector('.ad-form__input');
+const photosPreviewContainer = document.querySelector('.ad-form__photo');
 
 const setAvatarPreview = (input, preview) => {
   const file = input.files[0];
-
-  const matches = AcceptedFileTypes.includes(file.type);
+  const matches = ACCEPTED_FILE_TYPES.includes(file.type);
 
   if (matches) {
     preview.src = URL.createObjectURL(file);
+  } else {
+    showErrorMsg(ERROR_MESSAGE);
   }
 };
 
+const setPhotoPreview = (input, previewContainer) => {
+  const file = input.files[0];
+  const matches = ACCEPTED_FILE_TYPES.includes(file.type);
 
-//не работает
-// const setPhotoPreview = (input, previewContainer) => {
-//   // const file = input.files[0];
-//   // const reader = new FileReader();
-//   // reader.onloadend = () => {
-//   //   previewContainer.style.backgroundImage = `url('${reader.result})`;
-
-//   //   if (file) {
-//   //     reader.readAsDataURL(file);
-//   //   }
-//   // };
-//   //если так пробовать, не дает доступ к локальному ресурсу
-//   // previewContainer.style.backgroundImage = `url(${input.value})`;
-
-// };
+  if (matches) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.addEventListener('load', () => {
+      previewContainer.style.backgroundImage = `url("${reader.result}")`;
+      previewContainer.style.backgroundSize = 'cover';
+    });
+  } else {
+    showErrorMsg(ERROR_MESSAGE);
+  }
+};
 
 const onAvatarChange = () => setAvatarPreview(avatarInput, avatarPreview);
-// const onPhotoChange = () => setPhotoPreview(photoInput, photosPreviewContainer);
 
-export const setPreviews = () => {
+const onPhotoChange = () => setPhotoPreview(photoInput, photosPreviewContainer);
+
+const setPreviews = () => {
   avatarInput.addEventListener('change', onAvatarChange);
-  // photoInput.addEventListener('change', onPhotoChange);
+  photoInput.addEventListener('change', onPhotoChange);
 };
 
 const clearAvatarPreview = () => {
@@ -60,10 +64,15 @@ const clearAvatarPreview = () => {
 };
 
 const clearPhotosPreview = () => {
-  //
+  photosPreviewContainer.style.backgroundImage = 'none';
 };
 
-export const clearPreviews = () => {
+const clearPreviews = () => {
   clearAvatarPreview();
   clearPhotosPreview();
+};
+
+export {
+  setPreviews,
+  clearPreviews
 };
